@@ -4,9 +4,9 @@ import java.awt.event.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 public class ControlPanel extends JPanel {
-    private JButton startButton;
+    private final JButton startButton;
     private ImageIcon startButtonIcon;
-    private ImageIcon startButtonHoverIcon;
+    private final ImageIcon startButtonHoverIcon;
 
     public ControlPanel() {
         setLayout(new BorderLayout());

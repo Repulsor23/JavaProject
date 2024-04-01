@@ -7,9 +7,8 @@ class EuropePanel extends ImagePanel {
         super(imagePath);
     }
 
-    @Override
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Paint a different image representing Europe
     }
 }

@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 class ImagePanel extends JPanel {
-    private Image image;
+    private final Image image;
 
     public ImagePanel(String imagePath) throws IOException {
         image = ImageIO.read(new File(imagePath));

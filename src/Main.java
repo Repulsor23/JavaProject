@@ -5,8 +5,8 @@ import java.io.IOException;
 
 
 public class Main extends JFrame {
-    private JPanel cards;
-    private CardLayout cardLayout;
+    private final JPanel cards;
+    private final CardLayout cardLayout;
     private ImagePanel imagePanel;
 
     public Main() {
