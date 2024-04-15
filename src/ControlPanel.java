@@ -1,11 +1,10 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.plaf.basic.BasicButtonUI;
 
 public class ControlPanel extends JPanel {
     private final JButton startButton;
-    private ImageIcon startButtonIcon;
     private final ImageIcon startButtonHoverIcon;
 
     public ControlPanel() {
@@ -21,8 +20,6 @@ public class ControlPanel extends JPanel {
 
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 10));
         buttonPanel.setBackground(new Color(60, 63, 65));
-
-
 
         startButtonHoverIcon = new ImageIcon("src/nuke.png");
         startButton = new JButton("START");
@@ -55,6 +52,14 @@ public class ControlPanel extends JPanel {
 
 
 
+        });
+
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Print the action performed
+                System.out.println("START button clicked");
+            }
         });
         buttonPanel.add(startButton);
 

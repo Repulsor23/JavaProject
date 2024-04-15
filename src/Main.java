@@ -7,6 +7,7 @@ public class Main extends JFrame {
     private final JPanel cards;
     private final CardLayout cardLayout;
     private ImagePanel imagePanel;
+    private ImagePanel europePanel;
 
     public Main() {
         setTitle("Nuke A Country");
@@ -23,7 +24,7 @@ public class Main extends JFrame {
         cards.add(controlPanel, "controls");
 
         try {
-            imagePanel = new ImagePanel("src/world-map-pro.jpeg");
+            imagePanel = new ImagePanel("src/world-map-pro.jpg");
             setupImagePanel();
             cards.add(imagePanel, "Image");
         } catch (IOException e) {
@@ -31,8 +32,8 @@ public class Main extends JFrame {
         }
 
         try {
-            ImagePanel europePanel = new ImagePanel("src/europe-map.jpg");
-            setupEuropePanel(europePanel);
+            europePanel = new ImagePanel("src/europe-map.jpg");
+            setupEuropePanel();
             cards.add(europePanel, "Europe");
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,15 +51,26 @@ public class Main extends JFrame {
     private void setupImagePanel() {
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                cardLayout.show(cards, "Europe");
+                // Check if the mouse click is within the specified region
+                int startX = 706; // Starting X coordinate
+                int endX = 1065; // Ending X coordinate
+                int startY = 180; // Starting Y coordinate
+                int endY = 445; // Ending Y coordinate
+                if (e.getX() >= startX && e.getX() <= endX &&
+                        e.getY() >= startY && e.getY() <= endY) {
+                    // Mouse click is within the specified region, perform the desired action
+                    cardLayout.show(cards, "Europe");
+                }
             }
         });
 
+        // Remove the previous setup and key listeners
         KeyListener[] keyListeners = imagePanel.getKeyListeners();
         for (KeyListener listener : keyListeners) {
             imagePanel.removeKeyListener(listener);
         }
 
+        // Add key listener to handle ESC key
         imagePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapePressed");
         imagePanel.getActionMap().put("escapePressed", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
@@ -69,7 +81,19 @@ public class Main extends JFrame {
         imagePanel.setFocusable(true);
     }
 
-    private void setupEuropePanel(ImagePanel europePanel) {
+    private void setupEuropePanel() {
+        europePanel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                // Handle clicks in EuropePanel here
+                // Get the coordinates relative to the EuropePanel
+                int x = e.getX();
+                int y = e.getY();
+                // Print out the coordinates
+                System.out.println("Coordinates in EuropePanel: (" + x + ", " + y + ")");
+            }
+        });
+
+        // Add key listener to handle ESC key
         europePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapePressed");
         europePanel.getActionMap().put("escapePressed", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
@@ -77,6 +101,8 @@ public class Main extends JFrame {
                 setupImagePanel();
             }
         });
+
+        europePanel.setFocusable(true);
     }
 
     public static void main(String[] args) {
