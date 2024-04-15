@@ -15,6 +15,24 @@ class EuropePanel extends JPanel {
     public EuropePanel(String imagePath) throws IOException {
         image = ImageIO.read(new File(imagePath));
         setLayout(null);
+
+        JButton closeButton = new JButton("X");
+        closeButton.setBounds(10, 10, 50, 50);
+        closeButton.setFont(new Font("Monospaced", Font.PLAIN, 20));
+        closeButton.setContentAreaFilled(false);
+        closeButton.setForeground(Color.RED);
+        closeButton.setBorderPainted(false);
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit to menu?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    CardLayout layout = (CardLayout) getParent().getLayout();
+                    layout.show(getParent(), "controls");
+                }
+            }
+        });
+
+        add(closeButton);
     }
 
     protected void paintComponent(Graphics g) {

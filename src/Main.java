@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Random;
 import java.nio.file.*;
 import java.util.stream.Collectors;
@@ -47,21 +46,19 @@ public class Main extends JFrame {
         }
 
         // Load question data from CSV
-        loadQuestionData("src/questions.csv");
+        loadQuestionData();
 
-        controlPanel.getStartButton().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Randomly select a question
-                QuestionData questionData = selectRandomQuestion();
-                if (questionData != null) {
-                    // Display the question
-                    JOptionPane.showMessageDialog(null, questionData.getQuestion(), "Question", JOptionPane.INFORMATION_MESSAGE);
-                }
-                // Switch to the image panel
-                cardLayout.show(cards, "Image");
-                imagePanel.requestFocusInWindow();
-                setupImagePanel();
+        controlPanel.getStartButton().addActionListener(e -> {
+            // Randomly select a question
+            QuestionData questionData = selectRandomQuestion();
+            if (questionData != null) {
+                // Display the question
+                JOptionPane.showMessageDialog(null, questionData.getQuestion(), "Question", JOptionPane.INFORMATION_MESSAGE);
             }
+            // Switch to the image panel
+            cardLayout.show(cards, "Image");
+            imagePanel.requestFocusInWindow();
+            setupImagePanel();
         });
     }
 
@@ -119,8 +116,8 @@ public class Main extends JFrame {
         europePanel.setFocusable(true);
     }
 
-    private void loadQuestionData(String filePath) {
-        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+    private void loadQuestionData() {
+        try (Stream<String> lines = Files.lines(Paths.get("src/questions.csv"))) {
             questionDataList = lines
                     .skip(1) // Skip header
                     .map(line -> {
@@ -134,7 +131,7 @@ public class Main extends JFrame {
     }
 
     private QuestionData selectRandomQuestion() {
-        if (questionDataList != null && questionDataList.size() > 0) {
+        if (questionDataList != null && !questionDataList.isEmpty()) {
             Random random = new Random();
             int index = random.nextInt(questionDataList.size());
             return questionDataList.get(index);
@@ -143,7 +140,7 @@ public class Main extends JFrame {
     }
 
     private void checkBounds(int x1, int y1, int x2, int y2) {
-        if (questionDataList != null && questionDataList.size() > 0) {
+        if (questionDataList != null && !questionDataList.isEmpty()) {
             for (QuestionData questionData : questionDataList) {
                 if (x1 >= questionData.getX1() && x2 <= questionData.getX2() &&
                         y1 >= questionData.getY1() && y2 <= questionData.getY2()) {
