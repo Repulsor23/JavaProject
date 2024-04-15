@@ -2,12 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
+import java.nio.file.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main extends JFrame {
     private final JPanel cards;
     private final CardLayout cardLayout;
     private ImagePanel imagePanel;
-    private ImagePanel europePanel;
+    private EuropePanel europePanel;
+    private List<QuestionData> questionDataList;
 
     public Main() {
         setTitle("Nuke A Country");
@@ -32,15 +39,25 @@ public class Main extends JFrame {
         }
 
         try {
-            europePanel = new ImagePanel("src/europe-map.jpg");
+            europePanel = new EuropePanel("src/europe-map.jpg");
             setupEuropePanel();
             cards.add(europePanel, "Europe");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        // Load question data from CSV
+        loadQuestionData("src/questions.csv");
+
         controlPanel.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // Randomly select a question
+                QuestionData questionData = selectRandomQuestion();
+                if (questionData != null) {
+                    // Display the question
+                    JOptionPane.showMessageDialog(null, questionData.getQuestion(), "Question", JOptionPane.INFORMATION_MESSAGE);
+                }
+                // Switch to the image panel
                 cardLayout.show(cards, "Image");
                 imagePanel.requestFocusInWindow();
                 setupImagePanel();
@@ -51,7 +68,8 @@ public class Main extends JFrame {
     private void setupImagePanel() {
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                // Check if the mouse click is within the specified region
+                // Check if the click satisfies the bounds for the selected country
+                checkBounds(e.getX(), e.getY(), e.getX(), e.getY());
                 int startX = 706; // Starting X coordinate
                 int endX = 1065; // Ending X coordinate
                 int startY = 180; // Starting Y coordinate
@@ -84,12 +102,8 @@ public class Main extends JFrame {
     private void setupEuropePanel() {
         europePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                // Handle clicks in EuropePanel here
-                // Get the coordinates relative to the EuropePanel
-                int x = e.getX();
-                int y = e.getY();
-                // Print out the coordinates
-                System.out.println("Coordinates in EuropePanel: (" + x + ", " + y + ")");
+                // Check if the click satisfies the bounds for the selected country
+                checkBounds(e.getX(), e.getY(), e.getX(), e.getY());
             }
         });
 
@@ -103,6 +117,42 @@ public class Main extends JFrame {
         });
 
         europePanel.setFocusable(true);
+    }
+
+    private void loadQuestionData(String filePath) {
+        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+            questionDataList = lines
+                    .skip(1) // Skip header
+                    .map(line -> {
+                        String[] parts = line.split(",");
+                        return new QuestionData(parts[0], parts[1], Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]), Boolean.parseBoolean(parts[6]));
+                    })
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private QuestionData selectRandomQuestion() {
+        if (questionDataList != null && questionDataList.size() > 0) {
+            Random random = new Random();
+            int index = random.nextInt(questionDataList.size());
+            return questionDataList.get(index);
+        }
+        return null;
+    }
+
+    private void checkBounds(int x1, int y1, int x2, int y2) {
+        if (questionDataList != null && questionDataList.size() > 0) {
+            for (QuestionData questionData : questionDataList) {
+                if (x1 >= questionData.getX1() && x2 <= questionData.getX2() &&
+                        y1 >= questionData.getY1() && y2 <= questionData.getY2()) {
+                    JOptionPane.showMessageDialog(null, "Clicked within bounds of " + questionData.getCountry(), "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Clicked outside bounds", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public static void main(String[] args) {
