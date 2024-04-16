@@ -23,14 +23,13 @@ public class Main extends JFrame {
 
         cards = new JPanel(new CardLayout());
         cardLayout = (CardLayout) cards.getLayout();
-
         add(cards);
 
         ControlPanel controlPanel = new ControlPanel();
         cards.add(controlPanel, "controls");
 
         try {
-            imagePanel = new ImagePanel("src/world-map-pro.jpg");
+            imagePanel = new ImagePanel("src/world-map-pro.jpg", this);
             setupImagePanel();
             cards.add(imagePanel, "Image");
         } catch (IOException e) {
@@ -38,7 +37,7 @@ public class Main extends JFrame {
         }
 
         try {
-            europePanel = new EuropePanel("src/europe-map.jpg");
+            europePanel = new EuropePanel("src/europe-map.jpg", this);
             setupEuropePanel();
             cards.add(europePanel, "Europe");
         } catch (IOException e) {
@@ -79,19 +78,7 @@ public class Main extends JFrame {
             }
         });
 
-        // Remove the previous setup and key listeners
-        KeyListener[] keyListeners = imagePanel.getKeyListeners();
-        for (KeyListener listener : keyListeners) {
-            imagePanel.removeKeyListener(listener);
-        }
 
-        // Add key listener to handle ESC key
-        imagePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapePressed");
-        imagePanel.getActionMap().put("escapePressed", new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cards, "Image");
-            }
-        });
 
         imagePanel.setFocusable(true);
     }
@@ -139,7 +126,7 @@ public class Main extends JFrame {
         return null;
     }
 
-    private void checkBounds(int x1, int y1, int x2, int y2) {
+    protected void checkBounds(int x1, int y1, int x2, int y2) {
         if (questionDataList != null && !questionDataList.isEmpty()) {
             for (QuestionData questionData : questionDataList) {
                 if (x1 >= questionData.getX1() && x2 <= questionData.getX2() &&

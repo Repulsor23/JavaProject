@@ -54,12 +54,9 @@ public class ControlPanel extends JPanel {
 
         });
 
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Print the action performed
-                System.out.println("START button clicked");
-            }
+        startButton.addActionListener(e -> {
+            // Print the action performed
+            System.out.println("START button clicked");
         });
         buttonPanel.add(startButton);
 
@@ -69,12 +66,7 @@ public class ControlPanel extends JPanel {
         quitButton.setBackground(new Color(255, 0, 0));
         quitButton.setFocusPainted(false);
 
-        quitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        quitButton.addActionListener(e -> System.exit(0));
         buttonPanel.add(quitButton);
 
         add(buttonPanel, BorderLayout.CENTER);
