@@ -154,10 +154,11 @@ public class Main extends JFrame {
 
         if (questionDataList != null && !questionDataList.isEmpty()) {
             for (QuestionData questionData : questionDataList) {
-                if (x1 >= questionData.getX1() && x2 <= questionData.getX2() &&
-                        y1 >= questionData.getY1() && y2 <= questionData.getY2()) {
-                    JOptionPane.showMessageDialog(null, "Clicked within bounds of " + questionData.getCountry(), "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
-                    return;
+                if (europe == questionData.isEurope()) {
+                    if (x1 >= questionData.getX1() && x2 <= questionData.getX2() && y1 >= questionData.getY1() && y2 <= questionData.getY2()) {
+                        JOptionPane.showMessageDialog(null, "Clicked within bounds of " + questionData.getCountry(), "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
                 }
             }
             JOptionPane.showMessageDialog(null, "Clicked outside bounds", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
