@@ -5,12 +5,13 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 
-class EuropePanel extends JPanel {
+public class EuropePanel extends JPanel {
     private final Image image;
     private int lastClickedX1 = -1;
     private int lastClickedY1 = -1;
     private int lastClickedX2 = -1;
     private int lastClickedY2 = -1;
+    private boolean europe = false;
     private final Main main;
 
     public EuropePanel(String imagePath, Main main) throws IOException {
@@ -38,7 +39,9 @@ class EuropePanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    main.checkBounds(lastClickedX1, lastClickedY1, lastClickedX2, lastClickedY2);
+                    main.checkBounds(lastClickedX1, lastClickedY1, lastClickedX2, lastClickedY2, europe);
+                    // Clear the variables after checkBounds is called
+                    clearLastClicked();
                 }
             }
         });
@@ -56,10 +59,38 @@ class EuropePanel extends JPanel {
         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
             lastClickedX1 = e.getX();
             lastClickedY1 = e.getY();
-        }
-        if (e.getID() == MouseEvent.MOUSE_RELEASED) {
             lastClickedX2 = e.getX();
             lastClickedY2 = e.getY();
+
         }
+    }
+
+    // Method to clear last clicked coordinates
+    private void clearLastClicked() {
+        lastClickedX1 = -1;
+        lastClickedY1 = -1;
+        lastClickedX2 = -1;
+        lastClickedY2 = -1;
+        europe = false;
+    }
+
+    public int getLastClickedX1() {
+        return lastClickedX1;
+    }
+
+    public int getLastClickedY1() {
+        return lastClickedY1;
+    }
+
+    public int getLastClickedX2() {
+        return lastClickedX2;
+    }
+
+    public int getLastClickedY2() {
+        return lastClickedY2;
+    }
+
+    public boolean getEurope(){
+        return europe;
     }
 }

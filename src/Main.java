@@ -2,9 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.List;
 import java.util.Random;
-import java.nio.file.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,17 +55,19 @@ public class Main extends JFrame {
                 JOptionPane.showMessageDialog(null, questionData.getQuestion(), "Question", JOptionPane.INFORMATION_MESSAGE);
             }
             // Switch to the image panel
-            cardLayout.show(cards, "Image");
-            imagePanel.requestFocusInWindow();
-            setupImagePanel();
+            switchToImagePanel();
         });
+
+
+
     }
+
+
 
     private void setupImagePanel() {
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
-                checkBounds(e.getX(), e.getY(), e.getX(), e.getY());
                 int startX = 706; // Starting X coordinate
                 int endX = 1065; // Ending X coordinate
                 int startY = 180; // Starting Y coordinate
@@ -78,25 +80,47 @@ public class Main extends JFrame {
             }
         });
 
-
-
         imagePanel.setFocusable(true);
+
+        // Add KeyListener to handle Enter key press
+        imagePanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // Get the last clicked coordinates from the ImagePanel
+                    int x1 = imagePanel.getLastClickedX1();
+                    int y1 = imagePanel.getLastClickedY1();
+                    int x2 = imagePanel.getLastClickedX2();
+                    int y2 = imagePanel.getLastClickedY2();
+                    boolean europe = false;
+                    // Perform bounds check using the last clicked coordinates
+                    checkBounds(x1, y1, x2, y2, europe);
+                }
+            }
+        });
     }
 
     private void setupEuropePanel() {
-        europePanel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                // Check if the click satisfies the bounds for the selected country
-                checkBounds(e.getX(), e.getY(), e.getX(), e.getY());
+        europePanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // Get the last clicked coordinates from the ImagePanel
+                    int x1 = europePanel.getLastClickedX1();
+                    int y1 = europePanel.getLastClickedY1();
+                    int x2 = europePanel.getLastClickedX2();
+                    int y2 = europePanel.getLastClickedY2();
+                    boolean europe = true;
+                    // Perform bounds check using the last clicked coordinates
+                    checkBounds(x1, y1, x2, y2, europe);
+                }
             }
         });
 
-        // Add key listener to handle ESC key
         europePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapePressed");
         europePanel.getActionMap().put("escapePressed", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cards, "Image");
-                setupImagePanel();
+                switchToImagePanel();
             }
         });
 
@@ -126,7 +150,8 @@ public class Main extends JFrame {
         return null;
     }
 
-    protected void checkBounds(int x1, int y1, int x2, int y2) {
+    protected void checkBounds(int x1, int y1, int x2, int y2, boolean europe) {
+
         if (questionDataList != null && !questionDataList.isEmpty()) {
             for (QuestionData questionData : questionDataList) {
                 if (x1 >= questionData.getX1() && x2 <= questionData.getX2() &&
@@ -137,6 +162,12 @@ public class Main extends JFrame {
             }
             JOptionPane.showMessageDialog(null, "Clicked outside bounds", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    public void switchToImagePanel() {
+        cardLayout.show(cards, "Image");
+        imagePanel.requestFocusInWindow();
+        setupImagePanel();
     }
 
     public static void main(String[] args) {
