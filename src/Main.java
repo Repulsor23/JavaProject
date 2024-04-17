@@ -93,25 +93,16 @@ public class Main extends JFrame {
         return index;
     }
 
+
     private void setupImagePanel() {
+
         imagePanel.addMouseListener(new MouseAdapter() {
+
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
                 checkBounds(e.getX(), e.getY());
-                int startX = 706; // Starting X coordinate
-                int endX = 1065; // Ending X coordinate
-                int startY = 180; // Starting Y coordinate
-                int endY = 445; // Ending Y coordinate
-                if (e.getX() >= startX && e.getX() <= endX &&
-                        e.getY() >= startY && e.getY() <= endY) {
-                    // Mouse click is within the specified region, perform the desired action
-                    cardLayout.show(cards, "Europe");
-                }
             }
         });
-
-
-
         imagePanel.setFocusable(true);
     }
 
@@ -119,11 +110,13 @@ public class Main extends JFrame {
         if (lastDisplayedQuestionIndex != -1) {
             if (x >= x1s[lastDisplayedQuestionIndex] && x <= x2s[lastDisplayedQuestionIndex] &&
                     y >= y1s[lastDisplayedQuestionIndex] && y <= y2s[lastDisplayedQuestionIndex]) {
-                JOptionPane.showMessageDialog(null, "Clicked within bounds of " + countries[lastDisplayedQuestionIndex], "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "Clicked outside bounds", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Correct!", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
             }
-        } else {
+            else {
+                JOptionPane.showMessageDialog(null, "Wrong! Try Again", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        else {
             JOptionPane.showMessageDialog(null, "No question was displayed", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
