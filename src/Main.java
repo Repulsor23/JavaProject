@@ -18,7 +18,7 @@ public class Main extends JFrame {
     private int[] y1s;
     private int[] x2s;
     private int[] y2s;
-    private boolean[] isEuropes;
+    private int lastDisplayedQuestionIndex = -1;
 
     private List<Integer> askedIndices; // Track asked indices to prevent repetition
 
@@ -58,6 +58,7 @@ public class Main extends JFrame {
 
                 // Mark the question as asked
                 askedIndices.add(questionIndex);
+                lastDisplayedQuestionIndex = questionIndex; // Update last displayed question index
             }
 
             // Switch to the image panel
@@ -115,18 +116,15 @@ public class Main extends JFrame {
     }
 
     protected void checkBounds(int x, int y) {
-        if (questions != null && questions.length > 0) {
-            boolean found = false;
-            for (int i = 0; i < questions.length; i++) {
-                if (x >= x1s[i] && x <= x2s[i] && y >= y1s[i] && y <= y2s[i]) {
-                    JOptionPane.showMessageDialog(null, "Clicked within bounds of " + countries[i], "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
+        if (lastDisplayedQuestionIndex != -1) {
+            if (x >= x1s[lastDisplayedQuestionIndex] && x <= x2s[lastDisplayedQuestionIndex] &&
+                    y >= y1s[lastDisplayedQuestionIndex] && y <= y2s[lastDisplayedQuestionIndex]) {
+                JOptionPane.showMessageDialog(null, "Clicked within bounds of " + countries[lastDisplayedQuestionIndex], "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+            } else {
                 JOptionPane.showMessageDialog(null, "Clicked outside bounds", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "No question was displayed", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
