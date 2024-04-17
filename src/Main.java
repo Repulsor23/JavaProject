@@ -69,12 +69,12 @@ public class Main extends JFrame {
 
     private void initializeQuestionData() {
         // Sample question data (replace with your actual data)
-        questions = new String[]{"Question 1", "Question 2", "Question 3", /* Add more questions */};
-        countries = new String[]{"Country 1", "Country 2", "Country 3", /* Add more countries */};
-        x1s = new int[]{/* Add x1 values */};
-        y1s = new int[]{/* Add y1 values */};
-        x2s = new int[]{/* Add x2 values */};
-        y2s = new int[]{/* Add y2 values */};
+        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?"};
+        countries = new String[]{"Sweden", "Russia", "South Africa" };
+        x1s = new int[]{831, 1017, 911};
+        y1s = new int[]{223, 91, 849};
+        x2s = new int[]{941, 1706, 999};
+        y2s = new int[]{484, 331, 903};
     }
 
     private int getRandomQuestionIndex() {
