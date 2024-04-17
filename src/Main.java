@@ -1,19 +1,26 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
-import java.nio.file.*;
+        import java.awt.*;
+        import java.awt.event.*;
+        import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main extends JFrame {
     private final JPanel cards;
     private final CardLayout cardLayout;
     private ImagePanel imagePanel;
-    private EuropePanel europePanel;
-    private List<QuestionData> questionDataList;
+
+    // Arrays to hold question data
+    private String[] questions;
+    private String[] countries;
+    private int[] x1s;
+    private int[] y1s;
+    private int[] x2s;
+    private int[] y2s;
+    private boolean[] isEuropes;
+
+    private List<Integer> askedIndices; // Track asked indices to prevent repetition
 
     public Main() {
         setTitle("Nuke A Country");
@@ -36,38 +43,60 @@ public class Main extends JFrame {
             e.printStackTrace();
         }
 
-        try {
-            europePanel = new EuropePanel("src/europe-map.jpg", this);
-            setupEuropePanel();
-            cards.add(europePanel, "Europe");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Initialize question data
+        initializeQuestionData();
 
-        // Load question data from CSV
-        loadQuestionData();
+        askedIndices = new ArrayList<>(); // Initialize asked indices list
 
         controlPanel.getStartButton().addActionListener(e -> {
-            // Randomly select a question
-            QuestionData questionData = selectRandomQuestion();
-            if (questionData != null) {
-                // Display the question
-                JOptionPane.showMessageDialog(null, questionData.getQuestion(), "Question", JOptionPane.INFORMATION_MESSAGE);
+            // Randomly select a question index
+            int questionIndex = getRandomQuestionIndex();
+
+            // Display the question
+            if (questionIndex != -1) {
+                JOptionPane.showMessageDialog(null, questions[questionIndex], "Question", JOptionPane.INFORMATION_MESSAGE);
+
+                // Mark the question as asked
+                askedIndices.add(questionIndex);
             }
+
             // Switch to the image panel
-            switchToImagePanel();
+            cardLayout.show(cards, "Image");
+            imagePanel.requestFocusInWindow();
+            setupImagePanel();
         });
-
-
-
     }
 
+    private void initializeQuestionData() {
+        // Sample question data (replace with your actual data)
+        questions = new String[]{"Question 1", "Question 2", "Question 3", /* Add more questions */};
+        countries = new String[]{"Country 1", "Country 2", "Country 3", /* Add more countries */};
+        x1s = new int[]{/* Add x1 values */};
+        y1s = new int[]{/* Add y1 values */};
+        x2s = new int[]{/* Add x2 values */};
+        y2s = new int[]{/* Add y2 values */};
+    }
 
+    private int getRandomQuestionIndex() {
+        if (askedIndices.size() == questions.length) {
+            JOptionPane.showMessageDialog(null, "All questions have been asked.", "No Questions Left", JOptionPane.INFORMATION_MESSAGE);
+            return -1; // No questions left to ask
+        }
+
+        Random random = new Random();
+        int index;
+        do {
+            index = random.nextInt(questions.length);
+        } while (askedIndices.contains(index)); // Ensure the question hasn't been asked before
+
+        return index;
+    }
 
     private void setupImagePanel() {
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
+                checkBounds(e.getX(), e.getY());
                 int startX = 706; // Starting X coordinate
                 int endX = 1065; // Ending X coordinate
                 int startY = 180; // Starting Y coordinate
@@ -80,95 +109,25 @@ public class Main extends JFrame {
             }
         });
 
+
+
         imagePanel.setFocusable(true);
+    }
 
-        // Add KeyListener to handle Enter key press
-        imagePanel.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // Get the last clicked coordinates from the ImagePanel
-                    int x1 = imagePanel.getLastClickedX1();
-                    int y1 = imagePanel.getLastClickedY1();
-                    int x2 = imagePanel.getLastClickedX2();
-                    int y2 = imagePanel.getLastClickedY2();
-                    boolean europe = false;
-                    // Perform bounds check using the last clicked coordinates
-                    checkBounds(x1, y1, x2, y2, europe);
+    protected void checkBounds(int x, int y) {
+        if (questions != null && questions.length > 0) {
+            boolean found = false;
+            for (int i = 0; i < questions.length; i++) {
+                if (x >= x1s[i] && x <= x2s[i] && y >= y1s[i] && y <= y2s[i]) {
+                    JOptionPane.showMessageDialog(null, "Clicked within bounds of " + countries[i], "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+                    found = true;
+                    break;
                 }
             }
-        });
-    }
-
-    private void setupEuropePanel() {
-        europePanel.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // Get the last clicked coordinates from the ImagePanel
-                    int x1 = europePanel.getLastClickedX1();
-                    int y1 = europePanel.getLastClickedY1();
-                    int x2 = europePanel.getLastClickedX2();
-                    int y2 = europePanel.getLastClickedY2();
-                    boolean europe = true;
-                    // Perform bounds check using the last clicked coordinates
-                    checkBounds(x1, y1, x2, y2, europe);
-                }
+            if (!found) {
+                JOptionPane.showMessageDialog(null, "Clicked outside bounds", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
             }
-        });
-
-        europePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapePressed");
-        europePanel.getActionMap().put("escapePressed", new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                switchToImagePanel();
-            }
-        });
-
-        europePanel.setFocusable(true);
-    }
-
-    private void loadQuestionData() {
-        try (Stream<String> lines = Files.lines(Paths.get("src/questions.csv"))) {
-            questionDataList = lines
-                    .skip(1) // Skip header
-                    .map(line -> {
-                        String[] parts = line.split(",");
-                        return new QuestionData(parts[0], parts[1], Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]), Boolean.parseBoolean(parts[6]));
-                    })
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
-
-    private QuestionData selectRandomQuestion() {
-        if (questionDataList != null && !questionDataList.isEmpty()) {
-            Random random = new Random();
-            int index = random.nextInt(questionDataList.size());
-            return questionDataList.get(index);
-        }
-        return null;
-    }
-
-    protected void checkBounds(int x1, int y1, int x2, int y2, boolean europe) {
-
-        if (questionDataList != null && !questionDataList.isEmpty()) {
-            for (QuestionData questionData : questionDataList) {
-                if (europe == questionData.isEurope()) {
-                    if (x1 >= questionData.getX1() && x2 <= questionData.getX2() && y1 >= questionData.getY1() && y2 <= questionData.getY2()) {
-                        JOptionPane.showMessageDialog(null, "Clicked within bounds of " + questionData.getCountry(), "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
-                        return;
-                    }
-                }
-            }
-            JOptionPane.showMessageDialog(null, "Clicked outside bounds", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    public void switchToImagePanel() {
-        cardLayout.show(cards, "Image");
-        imagePanel.requestFocusInWindow();
-        setupImagePanel();
     }
 
     public static void main(String[] args) {

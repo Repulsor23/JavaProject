@@ -1,3 +1,4 @@
+//image
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +12,6 @@ public class ImagePanel extends JPanel {
     private int lastClickedY1 = -1;
     private int lastClickedX2 = -1;
     private int lastClickedY2 = -1;
-    private boolean europe = false;
     private final Main main;
 
     public ImagePanel(String imagePath, Main main) throws IOException {
@@ -39,8 +39,8 @@ public class ImagePanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    main.checkBounds(lastClickedX1, lastClickedY1, lastClickedX2, lastClickedY2, europe);
-                    // Clear the variables after checkBounds is called
+                    main.checkBounds(lastClickedX1, lastClickedY1);
+
                     clearLastClicked();
                 }
             }
@@ -61,7 +61,6 @@ public class ImagePanel extends JPanel {
             lastClickedY1 = e.getY();
             lastClickedX2 = e.getX();
             lastClickedY2 = e.getY();
-            europe = false;
 
         }
     }
@@ -90,7 +89,4 @@ public class ImagePanel extends JPanel {
         return lastClickedY2;
     }
 
-    public boolean getEurope(){
-        return europe;
-    }
 }
