@@ -75,12 +75,12 @@ public class Main extends JFrame {
 
     private void initializeQuestionData() {
         // Question and cords
-        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?", "In which country is the Niagara Falls located in?"};
-        countries = new String[]{"Sweden", "Russia", "South Africa, America" };
-        x1s = new int[]{831, 1017, 911, 241};
-        y1s = new int[]{223, 91, 849, 367};
-        x2s = new int[]{941, 1706, 999, 516};
-        y2s = new int[]{484, 331, 903, 534};
+        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?", "In what country is the Niagara Falls located in?", "What is the most populous country?", "What country does France share its longest land border with?"};
+        countries = new String[]{"Sweden", "Russia", "South Africa, America", "India", "Brazil"};
+        x1s = new int[]{906, 1017, 911, 241, 1187, 500};
+        y1s = new int[]{189, 91, 849, 367, 474, 617};
+        x2s = new int[]{935, 1706, 999, 516, 1263, 633};
+        y2s = new int[]{301, 331, 903, 534, 643, 895};
     }
 
     private int getRandomQuestionIndex() {
@@ -110,7 +110,7 @@ public class Main extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
 
         // Creating JLabel with center-aligned text using HTML
-        JLabel messageLabel = new JLabel("<html><div style='text-align: center; width: 800px;'>" + message + "</div></html>");
+        JLabel messageLabel = new JLabel("<html><div style='text-align: center; width: 1000px;'>" + message + "</div></html>");
         messageLabel.setFont(new Font("Arial", Font.PLAIN, 40)); // Change font size here
         panel.add(messageLabel, BorderLayout.CENTER);
 
@@ -137,7 +137,7 @@ public class Main extends JFrame {
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
         // Determine the preferred size based on the content
-        panel.setPreferredSize(new Dimension(1000, panel.getPreferredSize().height + 100));
+        panel.setPreferredSize(new Dimension(1300, panel.getPreferredSize().height + 100));
 
         JDialog dialog = new JDialog(this, title, true);
         dialog.setContentPane(panel);
@@ -153,7 +153,7 @@ public class Main extends JFrame {
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
 
-                //System.out.println(e.getX());
+               // System.out.println(e.getX());
                 //System.out.println(e.getY());
                 checkBounds(e.getX(), e.getY());
             }
