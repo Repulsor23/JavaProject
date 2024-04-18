@@ -77,7 +77,13 @@ public class Main extends JFrame {
 
     private int getRandomQuestionIndex() {
         if (askedIndices.size() == questions.length) {
-            showMessage("All questions have been asked.", "No Questions Left", -1);
+            if (score == askedIndices.size()){
+                showMessage("Good Job! You Are A Geography Pro!", "No Questions Left",-1);
+            }
+            else{
+                showMessage("Almost There! Just " + (askedIndices.size() - score) + " More!", "No Questions Left", -1);
+
+            }
             return -1; // No questions left to ask
         }
 
