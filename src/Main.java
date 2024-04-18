@@ -65,7 +65,7 @@ public class Main extends JFrame {
     }
 
     private void initializeQuestionData() {
-        // Sample question data (replace with your actual data)
+        // Question and cords
         questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?"};
         countries = new String[]{"Sweden", "Russia", "South Africa" };
         x1s = new int[]{831, 1017, 911};
@@ -90,10 +90,17 @@ public class Main extends JFrame {
     }
 
     private void showMessage(String message, String title, int questionIndex) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new JLabel(message), BorderLayout.CENTER);
-        JButton okButton = new JButton("OK");
+        JPanel panel = new JPanel(new BorderLayout());
+
+        // Creating JLabel with center-aligned text using HTML
+        JLabel messageLabel = new JLabel("<html><div style='text-align: center; width: 800px;'>" + message + "</div></html>");
+        messageLabel.setFont(new Font("Arial", Font.PLAIN, 40)); // Change font size here
+        panel.add(messageLabel, BorderLayout.CENTER);
+
+        // Create a JButton with center-aligned text using HTML
+        JButton okButton = new JButton("<html><div style='text-align: center; width: 100px;'>OK</div></html>");
+        okButton.setFont(new Font("Arial", Font.PLAIN, 30)); // Change button font size here
+        okButton.setPreferredSize(new Dimension(200, 80)); // Set button size
         okButton.addActionListener(e -> {
             if (title.equals("Question")) {
                 lastDisplayedQuestionIndex = questionIndex;
@@ -106,7 +113,14 @@ public class Main extends JFrame {
             }
             ((JDialog) panel.getTopLevelAncestor()).dispose();
         });
-        panel.add(okButton, BorderLayout.SOUTH);
+
+        // Create a panel to hold the button, allowing for custom size
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(okButton);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Determine the preferred size based on the content
+        panel.setPreferredSize(new Dimension(1000, panel.getPreferredSize().height + 100));
 
         JDialog dialog = new JDialog(this, title, true);
         dialog.setContentPane(panel);
@@ -114,6 +128,8 @@ public class Main extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+
+
 
     private void setupImagePanel() {
         imagePanel.addMouseListener(new MouseAdapter() {
