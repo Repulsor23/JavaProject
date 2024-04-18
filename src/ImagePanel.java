@@ -14,8 +14,8 @@ public class ImagePanel extends JPanel {
         setLayout(null);
 
         JButton closeButton = new JButton("X");
-        closeButton.setBounds(10, 10, 50, 50);
-        closeButton.setFont(new Font("Monospaced", Font.PLAIN, 20));
+        closeButton.setBounds(10, 5, 100, 100);
+        closeButton.setFont(new Font("Monospaced", Font.PLAIN, 50));
         closeButton.setContentAreaFilled(false);
         closeButton.setForeground(Color.RED);
         closeButton.setBorderPainted(false);
@@ -30,9 +30,9 @@ public class ImagePanel extends JPanel {
 
         // Add JLabel to display score
         scoreLabel = new JLabel("Score: " + score);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 40));
         scoreLabel.setForeground(Color.BLACK);
-        scoreLabel.setBounds(10, 70, 150, 30);
+        scoreLabel.setBounds(1500, 40, 300, 30);
         add(scoreLabel);
 
         setFocusable(true);
