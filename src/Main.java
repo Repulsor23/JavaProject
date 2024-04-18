@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.Timer;
 
 public class Main extends JFrame {
     private final JPanel cards;
@@ -90,13 +89,11 @@ public class Main extends JFrame {
     }
 
     private void showMessage(String message, String title, int questionIndex) {
-        JOptionPane optionPane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-        JDialog dialog = optionPane.createDialog(title);
-        dialog.setModal(false);
-        dialog.setVisible(true);
-
-        Timer timer = new Timer(3000, e -> {
-            dialog.dispose();
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(new JLabel(message), BorderLayout.CENTER);
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(e -> {
             if (title.equals("Question")) {
                 lastDisplayedQuestionIndex = questionIndex;
             } else if (title.equals("Bounds Check")) {
@@ -106,9 +103,15 @@ public class Main extends JFrame {
                     askedIndices.add(nextQuestionIndex);
                 }
             }
+            ((JDialog) panel.getTopLevelAncestor()).dispose();
         });
-        timer.setRepeats(false);
-        timer.start();
+        panel.add(okButton, BorderLayout.SOUTH);
+
+        JDialog dialog = new JDialog(this, title, true);
+        dialog.setContentPane(panel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
     private void setupImagePanel() {
