@@ -10,6 +10,7 @@ public class Main extends JFrame {
     private final JPanel cards;
     private final CardLayout cardLayout;
     private ImagePanel imagePanel;
+    private Endscreen endScreen;
 
     // Arrays to hold question data
     private String[] questions;
@@ -40,6 +41,13 @@ public class Main extends JFrame {
             imagePanel = new ImagePanel("src/world-map-pro.jpg", this);
             setupImagePanel(); // Add setupImagePanel here
             cards.add(imagePanel, "Image");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            endScreen = new Endscreen("src/nuke.jpg", this);
+            cards.add(endScreen, "End");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,11 +86,13 @@ public class Main extends JFrame {
     private int getRandomQuestionIndex() {
         if (askedIndices.size() == questions.length) {
             if (score == askedIndices.size()){
+                cardLayout.show(cards, "End");
                 showMessage("Good Job! You Are A Geography Pro!", "No Questions Left",-1);
+                System.exit(0);
             }
             else{
                 showMessage("Almost There! Just " + (askedIndices.size() - score) + " More!", "No Questions Left", -1);
-
+                System.exit(0);
             }
             return -1; // No questions left to ask
         }
