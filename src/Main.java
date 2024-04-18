@@ -75,12 +75,12 @@ public class Main extends JFrame {
 
     private void initializeQuestionData() {
         // Question and cords
-        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?", "In what country is the Niagara Falls located in?", "What is the most populous country?", "What country does France share its longest land border with?"};
-        countries = new String[]{"Sweden", "Russia", "South Africa, America", "India", "Brazil"};
-        x1s = new int[]{906, 1017, 911, 241, 1187, 500};
-        y1s = new int[]{189, 91, 849, 367, 474, 617};
-        x2s = new int[]{935, 1706, 999, 516, 1263, 633};
-        y2s = new int[]{301, 331, 903, 534, 643, 895};
+        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?", "In what country is the Niagara Falls located in?", "What is the most populous country?", "What country does France share its longest land border with?", "Which country has the longest runtime of a nuclear fusion reactor?", "Which country has the longest coastline in the world?", "Which country has the largest eco-system in the world?", "In which country is Rome located in?", "In which country does the Amazon River start in?", "In which country is is the Nile River located in?", "What country did Genghis Khan Rule?"};
+        countries = new String[]{"Sweden", "Russia", "South Africa, America", "India", "Brazil", "South Korea", "Canada", "Australia", "Italy", "Peru", "Egypt, Mongolia"};
+        x1s = new int[]{906, 1017, 911, 241, 1187, 500, 1430, 165, 1386, 877, 429, 963, 1289};
+        y1s = new int[]{189, 91, 849, 367, 474, 617, 443, 0, 754, 392, 703, 483, 332};
+        x2s = new int[]{935, 1706, 999, 516, 1263, 633, 1477, 591, 1601, 938, 511, 1023, 1402};
+        y2s = new int[]{301, 331, 903, 534, 643, 895, 474, 361, 968, 447, 795, 551, 441};
     }
 
     private int getRandomQuestionIndex() {
@@ -153,9 +153,9 @@ public class Main extends JFrame {
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
 
-               // System.out.println(e.getX());
-                //System.out.println(e.getY());
-                checkBounds(e.getX(), e.getY());
+               System.out.println(e.getX());
+               System.out.println(e.getY());
+               checkBounds(e.getX(), e.getY());
             }
         });
         imagePanel.setFocusable(true);
