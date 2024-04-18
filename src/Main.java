@@ -19,6 +19,7 @@ public class Main extends JFrame {
     private int[] x2s;
     private int[] y2s;
     private int lastDisplayedQuestionIndex = -1;
+    private int score = 0;
 
     private List<Integer> askedIndices; // Track asked indices to prevent repetition
 
@@ -145,6 +146,8 @@ public class Main extends JFrame {
         if (lastDisplayedQuestionIndex != -1) {
             if (x >= x1s[lastDisplayedQuestionIndex] && x <= x2s[lastDisplayedQuestionIndex] &&
                     y >= y1s[lastDisplayedQuestionIndex] && y <= y2s[lastDisplayedQuestionIndex]) {
+                score++;
+                imagePanel.updateScore(score); // Call updateScore method to update the score in ImagePanel
                 showMessage("Correct!", "Bounds Check", -1);
             } else {
                 showMessage("Wrong! Try Again", "Bounds Check", -1);
@@ -153,6 +156,7 @@ public class Main extends JFrame {
             showMessage("No question was displayed", "Error", -1);
         }
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
