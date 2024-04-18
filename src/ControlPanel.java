@@ -55,8 +55,7 @@ public class ControlPanel extends JPanel {
         });
 
         startButton.addActionListener(e -> {
-            // Print the action performed
-            System.out.println("START button clicked");
+            startButton.setText("CONTINUE");
         });
         buttonPanel.add(startButton);
 
