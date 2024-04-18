@@ -1,10 +1,11 @@
 import javax.swing.*;
-        import java.awt.*;
-        import java.awt.event.*;
-        import java.io.IOException;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.swing.Timer;
 
 public class Main extends JFrame {
     private final JPanel cards;
@@ -37,7 +38,7 @@ public class Main extends JFrame {
 
         try {
             imagePanel = new ImagePanel("src/world-map-pro.jpg", this);
-            setupImagePanel();
+            setupImagePanel(); // Add setupImagePanel here
             cards.add(imagePanel, "Image");
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,17 +55,12 @@ public class Main extends JFrame {
 
             // Display the question
             if (questionIndex != -1) {
-                JOptionPane.showMessageDialog(null, questions[questionIndex], "Question", JOptionPane.INFORMATION_MESSAGE);
-
-                // Mark the question as asked
-                askedIndices.add(questionIndex);
-                lastDisplayedQuestionIndex = questionIndex; // Update last displayed question index
+                showMessage(questions[questionIndex], "Question", questionIndex);
             }
 
             // Switch to the image panel
             cardLayout.show(cards, "Image");
             imagePanel.requestFocusInWindow();
-            setupImagePanel();
         });
     }
 
@@ -80,7 +76,7 @@ public class Main extends JFrame {
 
     private int getRandomQuestionIndex() {
         if (askedIndices.size() == questions.length) {
-            JOptionPane.showMessageDialog(null, "All questions have been asked.", "No Questions Left", JOptionPane.INFORMATION_MESSAGE);
+            showMessage("All questions have been asked.", "No Questions Left", -1);
             return -1; // No questions left to ask
         }
 
@@ -93,11 +89,30 @@ public class Main extends JFrame {
         return index;
     }
 
+    private void showMessage(String message, String title, int questionIndex) {
+        JOptionPane optionPane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+        JDialog dialog = optionPane.createDialog(title);
+        dialog.setModal(false);
+        dialog.setVisible(true);
+
+        Timer timer = new Timer(3000, e -> {
+            dialog.dispose();
+            if (title.equals("Question")) {
+                lastDisplayedQuestionIndex = questionIndex;
+            } else if (title.equals("Bounds Check")) {
+                int nextQuestionIndex = getRandomQuestionIndex();
+                if (nextQuestionIndex != -1) {
+                    showMessage(questions[nextQuestionIndex], "Question", nextQuestionIndex);
+                    askedIndices.add(nextQuestionIndex);
+                }
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
 
     private void setupImagePanel() {
-
         imagePanel.addMouseListener(new MouseAdapter() {
-
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
                 checkBounds(e.getX(), e.getY());
@@ -110,14 +125,12 @@ public class Main extends JFrame {
         if (lastDisplayedQuestionIndex != -1) {
             if (x >= x1s[lastDisplayedQuestionIndex] && x <= x2s[lastDisplayedQuestionIndex] &&
                     y >= y1s[lastDisplayedQuestionIndex] && y <= y2s[lastDisplayedQuestionIndex]) {
-                JOptionPane.showMessageDialog(null, "Correct!", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
+                showMessage("Correct!", "Bounds Check", -1);
+            } else {
+                showMessage("Wrong! Try Again", "Bounds Check", -1);
             }
-            else {
-                JOptionPane.showMessageDialog(null, "Wrong! Try Again", "Bounds Check", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-        else {
-            JOptionPane.showMessageDialog(null, "No question was displayed", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            showMessage("No question was displayed", "Error", -1);
         }
     }
 
