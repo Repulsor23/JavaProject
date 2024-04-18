@@ -55,6 +55,7 @@ public class Main extends JFrame {
             // Display the question
             if (questionIndex != -1) {
                 showMessage(questions[questionIndex], "Question", questionIndex);
+                askedIndices.add(questionIndex); // Add the index to prevent repetition
             }
 
             // Switch to the image panel
