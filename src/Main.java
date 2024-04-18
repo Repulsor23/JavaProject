@@ -75,12 +75,12 @@ public class Main extends JFrame {
 
     private void initializeQuestionData() {
         // Question and cords
-        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?"};
-        countries = new String[]{"Sweden", "Russia", "South Africa" };
-        x1s = new int[]{831, 1017, 911};
-        y1s = new int[]{223, 91, 849};
-        x2s = new int[]{941, 1706, 999};
-        y2s = new int[]{484, 331, 903};
+        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?", "In which country is the Niagara Falls located in?"};
+        countries = new String[]{"Sweden", "Russia", "South Africa, America" };
+        x1s = new int[]{831, 1017, 911, 241};
+        y1s = new int[]{223, 91, 849, 367};
+        x2s = new int[]{941, 1706, 999, 516};
+        y2s = new int[]{484, 331, 903, 534};
     }
 
     private int getRandomQuestionIndex() {
@@ -152,6 +152,9 @@ public class Main extends JFrame {
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
+
+                //System.out.println(e.getX());
+                //System.out.println(e.getY());
                 checkBounds(e.getX(), e.getY());
             }
         });
