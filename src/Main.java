@@ -102,6 +102,7 @@ public class Main extends JFrame {
         okButton.setFont(new Font("Arial", Font.PLAIN, 30)); // Change button font size here
         okButton.setPreferredSize(new Dimension(200, 80)); // Set button size
         okButton.addActionListener(e -> {
+            ((JDialog) panel.getTopLevelAncestor()).dispose();
             if (title.equals("Question")) {
                 lastDisplayedQuestionIndex = questionIndex;
             } else if (title.equals("Bounds Check")) {
@@ -111,7 +112,6 @@ public class Main extends JFrame {
                     askedIndices.add(nextQuestionIndex);
                 }
             }
-            ((JDialog) panel.getTopLevelAncestor()).dispose();
         });
 
         // Create a panel to hold the button, allowing for custom size
