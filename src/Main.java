@@ -19,6 +19,8 @@ public class Main extends JFrame {
     private int[] y1s;
     private int[] x2s;
     private int[] y2s;
+    private int x = -1;
+    private int y = -1;
     private int lastDisplayedQuestionIndex = -1;
     private int score = 0;
 
@@ -149,10 +151,12 @@ public class Main extends JFrame {
     private void setupImagePanel() {
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
+                x = e.getX();
+                y = e.getY();
                 // Check if the click satisfies the bounds for the selected country
-                System.out.println(e.getX());
-                System.out.println(e.getY());
-                checkBounds(e.getX(), e.getY());
+                //System.out.println(x);
+                //System.out.println(y);
+                checkBounds(x, y);
             }
         });
         imagePanel.setFocusable(true);

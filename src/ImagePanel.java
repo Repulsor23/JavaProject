@@ -14,14 +14,14 @@ public class ImagePanel extends JPanel {
     private BufferedImage pngImage;
     private int score;
     private JLabel scoreLabel; // JLabel to display the score
-    private List<Point> clickPoints; // List to store clicked points
+
+
 
     public ImagePanel(String imagePath, String pngImagePath, Main main) throws IOException {
         backgroundImage = ImageIO.read(new File(imagePath));
         pngImage = ImageIO.read(new File(pngImagePath));
 
         setLayout(null);
-        clickPoints = new ArrayList<>();
 
         JButton closeButton = new JButton("X");
         closeButton.setBounds(10, 5, 100, 100);
@@ -45,20 +45,8 @@ public class ImagePanel extends JPanel {
         scoreLabel.setBounds(1500, 40, 300, 30);
         add(scoreLabel);
 
-        // Add mouse listener to listen for mouse clicks
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                // Get the clicked point
-                Point clickedPoint = e.getPoint();
-                // Add the clicked point to the list
-                clickPoints.add(clickedPoint);
-                // Repaint the panel to draw the clicked points
-                repaint();
-            }
 
-        });
+
 
         setFocusable(true);
     }
@@ -66,16 +54,7 @@ public class ImagePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        System.out.println("e");
-        // Draw red dot at each clicked point
 
-        for (Point point : clickPoints) {
-            int x = point.x - 5; // Adjust position to center dot
-            int y = point.y - 5; // Adjust position to center dot
-            System.out.println("y");
-            g.setColor(Color.RED);
-            g.fillOval(x, y, 10, 10); // Draw a larger filled oval representing the dot
-        }
     }
 
 
