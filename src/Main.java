@@ -22,7 +22,7 @@ public class Main extends JFrame {
     private int lastDisplayedQuestionIndex = -1;
     private int score = 0;
 
-    private List<Integer> askedIndices; // Track asked indices to prevent repetition
+    private List<Integer> list; // Track questions to prevent repetition
 
     public Main() {
         setTitle("Nuke A Country");
@@ -38,7 +38,7 @@ public class Main extends JFrame {
         cards.add(controlPanel, "controls");
 
         try {
-            imagePanel = new ImagePanel("src/world-map-pro.jpg", this);
+            imagePanel = new ImagePanel("src/world-map-pro.jpg", "src/blast.png", this); // Pass path to PNG image
             setupImagePanel(); // Add setupImagePanel here
             cards.add(imagePanel, "Image");
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class Main extends JFrame {
         // Initialize question data
         initializeQuestionData();
 
-        askedIndices = new ArrayList<>(); // Initialize asked indices list
+        list = new ArrayList<>(); // Initialize asked indices list
 
         controlPanel.getStartButton().addActionListener(e -> {
             // Randomly select a question index
@@ -64,7 +64,7 @@ public class Main extends JFrame {
             // Display the question
             if (questionIndex != -1) {
                 showMessage(questions[questionIndex], "Question", questionIndex);
-                askedIndices.add(questionIndex); // Add the index to prevent repetition
+                list.add(questionIndex); // Add the index to prevent repetition
             }
 
             // Switch to the image panel
@@ -84,14 +84,14 @@ public class Main extends JFrame {
     }
 
     private int getRandomQuestionIndex() {
-        if (askedIndices.size() == questions.length) {
-            if (score == askedIndices.size()){
+        if (list.size() == questions.length) {
+            if (score == list.size()){
                 cardLayout.show(cards, "End");
                 showMessage("Good Job! You Are A Geography Pro!", "No Questions Left",-1);
                 System.exit(0);
             }
             else{
-                showMessage("Almost There! Just " + (askedIndices.size() - score) + " More!", "No Questions Left", -1);
+                showMessage("Almost There! Just " + (list.size() - score) + " More!", "No Questions Left", -1);
                 System.exit(0);
             }
             return -1; // No questions left to ask
@@ -101,7 +101,7 @@ public class Main extends JFrame {
         int index;
         do {
             index = random.nextInt(questions.length);
-        } while (askedIndices.contains(index)); // Ensure the question hasn't been asked before
+        } while (list.contains(index)); // Ensure the question hasn't been asked before
 
         return index;
     }
@@ -126,7 +126,7 @@ public class Main extends JFrame {
                 int nextQuestionIndex = getRandomQuestionIndex();
                 if (nextQuestionIndex != -1) {
                     showMessage(questions[nextQuestionIndex], "Question", nextQuestionIndex);
-                    askedIndices.add(nextQuestionIndex);
+                    list.add(nextQuestionIndex);
                 }
             }
         });
@@ -146,16 +146,13 @@ public class Main extends JFrame {
         dialog.setVisible(true);
     }
 
-
-
     private void setupImagePanel() {
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 // Check if the click satisfies the bounds for the selected country
-
-               System.out.println(e.getX());
-               System.out.println(e.getY());
-               checkBounds(e.getX(), e.getY());
+                System.out.println(e.getX());
+                System.out.println(e.getY());
+                checkBounds(e.getX(), e.getY());
             }
         });
         imagePanel.setFocusable(true);
@@ -169,7 +166,7 @@ public class Main extends JFrame {
                 imagePanel.updateScore(score); // Call updateScore method to update the score in ImagePanel
                 showMessage("Correct!", "Bounds Check", -1);
             } else {
-                showMessage("Wrong! Try Again", "Bounds Check", -1);
+                showMessage("Oops! Maybe Next Time!", "Bounds Check", -1);
             }
         } else {
             showMessage("No question was displayed", "Error", -1);
