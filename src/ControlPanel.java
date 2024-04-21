@@ -22,7 +22,7 @@ public class ControlPanel extends JPanel {
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Add question mark button next to the title
-        JButton helpButton = new JButton("?");
+        JButton helpButton = new JButton("Help");
         helpButton.setFont(new Font("Arial", Font.BOLD, 60));
         helpButton.setForeground(Color.BLACK);
         helpButton.setBackground(Color.WHITE);

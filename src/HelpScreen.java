@@ -6,7 +6,11 @@ import java.io.IOException;
 
 public class HelpScreen extends JPanel {
 
+    private final Main main;
+
     public HelpScreen(Main main) throws IOException {
+        this.main = main;
+
 
     }
 
