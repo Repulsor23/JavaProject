@@ -98,10 +98,10 @@ public class Main extends JFrame {
         if (list.size() == questions.length) {
             if (score == list.size()) {
                 cardLayout.show(cards, "End");
-                showMessage("Good Job! You Are A Geography Pro!", "No Questions Left", -1);
+                showMessage("Good Job! You Are A Geography Pro! Score: " + score + "/15", "No Questions Left", -1);
                 System.exit(0);
             } else {
-                showMessage("Almost There! Just " + (list.size() - score) + " More!", "No Questions Left", -1);
+                showMessage("Almost There! Just " + (list.size() - score) + " More! Score: " + score + "/15", "No Questions Left", -1);
                 System.exit(0);
             }
             return -1; // No questions left to ask
