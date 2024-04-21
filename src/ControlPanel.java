@@ -6,17 +6,35 @@ import java.awt.event.*;
 public class ControlPanel extends JPanel {
     private final JButton startButton;
     private final ImageIcon startButtonHoverIcon;
+    private final Main main; // Main instance
 
-    public ControlPanel() {
+    public ControlPanel(Main main) {
+        this.main = main; // Initialize Main instance
+
         setLayout(new BorderLayout());
         setBackground(new Color(60, 63, 65));
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         JLabel titleLabel = new JLabel("NukeACountry.io");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 150));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(Color.BLACK);
+        titleLabel.setBackground(new Color(60, 63, 65));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(titleLabel, BorderLayout.NORTH);
+
+        // Add question mark button next to the title
+        JButton helpButton = new JButton("?");
+        helpButton.setFont(new Font("Arial", Font.BOLD, 60));
+        helpButton.setForeground(Color.BLACK);
+        helpButton.setBackground(Color.WHITE);
+        helpButton.setBorderPainted(false);
+        helpButton.setFocusPainted(false);
+        helpButton.addActionListener(e -> main.showHelpScreen()); // Call showHelpScreen method on click
+
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.add(helpButton, BorderLayout.EAST);
+
+        add(titlePanel, BorderLayout.NORTH);
 
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 10));
         buttonPanel.setBackground(new Color(60, 63, 65));
@@ -30,7 +48,6 @@ public class ControlPanel extends JPanel {
         startButton.setFocusPainted(false);
 
         startButton.addMouseListener(new MouseAdapter() {
-
             public void mouseEntered(MouseEvent e) {
                 startButton.setUI(new BasicButtonUI() {
                     public void paint(Graphics g, JComponent c) {
@@ -49,9 +66,6 @@ public class ControlPanel extends JPanel {
                     }
                 });
             }
-
-
-
         });
 
         startButton.addActionListener(e -> {

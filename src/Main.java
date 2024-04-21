@@ -11,6 +11,7 @@ public class Main extends JFrame {
     private final CardLayout cardLayout;
     private ImagePanel imagePanel;
     private Endscreen endScreen;
+    private HelpScreen helpScreen; // Add HelpScreen instance variable
 
     // Arrays to hold question data
     private String[] questions;
@@ -36,12 +37,12 @@ public class Main extends JFrame {
         cardLayout = (CardLayout) cards.getLayout();
         add(cards);
 
-        ControlPanel controlPanel = new ControlPanel();
+        ControlPanel controlPanel = new ControlPanel(this); // Pass Main instance to ControlPanel
         cards.add(controlPanel, "controls");
 
         try {
-            imagePanel = new ImagePanel("src/world-map-pro.jpg", "src/blast.png", this); // Pass path to PNG image
-            setupImagePanel(); // Add setupImagePanel here
+            imagePanel = new ImagePanel("src/world-map-pro.jpg", "src/blast.png", this);
+            setupImagePanel();
             cards.add(imagePanel, "Image");
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,6 +51,14 @@ public class Main extends JFrame {
         try {
             endScreen = new Endscreen("src/nuke.jpg", this);
             cards.add(endScreen, "End");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Initialize HelpScreen
+        try {
+            helpScreen = new HelpScreen(this);
+            cards.add(helpScreen, "Help");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,12 +96,11 @@ public class Main extends JFrame {
 
     private int getRandomQuestionIndex() {
         if (list.size() == questions.length) {
-            if (score == list.size()){
+            if (score == list.size()) {
                 cardLayout.show(cards, "End");
-                showMessage("Good Job! You Are A Geography Pro!", "No Questions Left",-1);
+                showMessage("Good Job! You Are A Geography Pro!", "No Questions Left", -1);
                 System.exit(0);
-            }
-            else{
+            } else {
                 showMessage("Almost There! Just " + (list.size() - score) + " More!", "No Questions Left", -1);
                 System.exit(0);
             }
@@ -153,9 +161,6 @@ public class Main extends JFrame {
             public void mousePressed(MouseEvent e) {
                 x = e.getX();
                 y = e.getY();
-                // Check if the click satisfies the bounds for the selected country
-                //System.out.println(x);
-                //System.out.println(y);
                 checkBounds(x, y);
             }
         });
@@ -167,7 +172,7 @@ public class Main extends JFrame {
             if (x >= x1s[lastDisplayedQuestionIndex] && x <= x2s[lastDisplayedQuestionIndex] &&
                     y >= y1s[lastDisplayedQuestionIndex] && y <= y2s[lastDisplayedQuestionIndex]) {
                 score++;
-                imagePanel.updateScore(score); // Call updateScore method to update the score in ImagePanel
+                imagePanel.updateScore(score);
                 showMessage("Correct!", "Bounds Check", -1);
             } else {
                 showMessage("Oops! Maybe Next Time! - Answer: " + countries[lastDisplayedQuestionIndex], "Bounds Check", -1);
@@ -177,6 +182,10 @@ public class Main extends JFrame {
         }
     }
 
+    // Method to show the HelpScreen
+    public void showHelpScreen() {
+        cardLayout.show(cards, "Help");
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
