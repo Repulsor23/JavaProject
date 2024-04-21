@@ -9,8 +9,11 @@ public class HelpScreen extends JPanel {
     private final Main main;
 
     public HelpScreen(Main main) throws IOException {
+        repaint();
         this.main = main;
-
+        JButton readyButton = new JButton("Im Ready!");
+        readyButton.addActionListener(e -> main.showControlPanel());
+        add(readyButton);
 
     }
 

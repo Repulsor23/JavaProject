@@ -187,6 +187,10 @@ public class Main extends JFrame {
         cardLayout.show(cards, "Help");
     }
 
+    public void showControlPanel() {
+        cardLayout.show(cards, "controls");
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Main main = new Main();
