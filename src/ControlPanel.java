@@ -15,7 +15,7 @@ public class ControlPanel extends JPanel {
         setBackground(new Color(60, 63, 65));
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-        JLabel titleLabel = new JLabel("NukeACountry.io");
+        JLabel titleLabel = new JLabel("   NukeACountry.io");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 150));
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setBackground(new Color(60, 63, 65));
@@ -25,7 +25,7 @@ public class ControlPanel extends JPanel {
         JButton helpButton = new JButton("Help");
         helpButton.setFont(new Font("Arial", Font.BOLD, 60));
         helpButton.setForeground(Color.BLACK);
-        helpButton.setBackground(Color.WHITE);
+        helpButton.setBackground(Color.GRAY);
         helpButton.setBorderPainted(false);
         helpButton.setFocusPainted(false);
         helpButton.addActionListener(e -> main.showHelpScreen()); // Call showHelpScreen method on click

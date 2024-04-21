@@ -11,7 +11,7 @@ public class HelpScreen extends JPanel {
     public HelpScreen(Main main) throws IOException {
         this.main = main;
         setBackground(Color.BLACK);
-        JButton readyButton = new JButton("Im Ready!");
+        JButton readyButton = new JButton("Im Ready To Go!");
         readyButton.setFont(new Font("Monospaced", Font.BOLD, 100));
         readyButton.setForeground(Color.WHITE);
         readyButton.setBorderPainted(false);
