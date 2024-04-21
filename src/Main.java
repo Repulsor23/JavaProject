@@ -99,10 +99,10 @@ public class Main extends JFrame {
             if (score == list.size()) {
                 cardLayout.show(cards, "End");
                 showMessage("Good Job! You Are A Geography Pro! Score: " + score + "/15", "No Questions Left", -1);
-                System.exit(0);
+                cardLayout.show(cards, "controls");
             } else {
                 showMessage("Almost There! Just " + (list.size() - score) + " More! Score: " + score + "/15", "No Questions Left", -1);
-                System.exit(0);
+                cardLayout.show(cards, "controls");
             }
             return -1; // No questions left to ask
         }
