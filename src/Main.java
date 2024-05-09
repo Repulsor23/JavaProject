@@ -112,25 +112,25 @@ public class Main extends JFrame {
             return -1; // No questions left to ask
         }
 
-        List<Integer> oddIndices = new ArrayList<>();
-        List<Integer> evenIndices = new ArrayList<>();
+        List<Integer> oddindexes = new ArrayList<>();
+        List<Integer> evenindexes = new ArrayList<>();
 
-        // Splitting indices into odd and even lists
+        // Splitting indexes into odd and even lists
         for (int i = 0; i < questions.length; i++) {
             if (!list.contains(i)) {
                 if (i % 2 != 0) {
-                    oddIndices.add(i);
+                    oddindexes.add(i);
                 } else {
-                    evenIndices.add(i);
+                    evenindexes.add(i);
                 }
             }
         }
 
-        // Prioritize odd indices before even ones
-        if (!oddIndices.isEmpty()) {
-            return oddIndices.get(new Random().nextInt(oddIndices.size()));
-        } else if (!evenIndices.isEmpty()) {
-            return evenIndices.get(new Random().nextInt(evenIndices.size()));
+        // Prioritize odd indexes before even ones
+        if (!oddindexes.isEmpty()) {
+            return oddindexes.get(new Random().nextInt(oddindexes.size()));
+        } else if (!evenindexes.isEmpty()) {
+            return evenindexes.get(new Random().nextInt(evenindexes.size()));
         } else {
             // In case no new questions are left
             return -1;
