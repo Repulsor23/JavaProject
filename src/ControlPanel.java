@@ -6,33 +6,28 @@ import java.awt.event.*;
 public class ControlPanel extends JPanel {
     private final JButton startButton;
     private final ImageIcon startButtonHoverIcon;
-    private final Main main; // Main instance
+    private final Main main; 
+    private Boolean Switch = false;
 
     public ControlPanel(Main main) {
-        this.main = main; // Initialize Main instance
+        this.main = main; 
 
         setLayout(new BorderLayout());
         setBackground(new Color(60, 63, 65));
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-        JLabel titleLabel = new JLabel("   NukeACountry.io");
+        JLabel titleLabel = new JLabel("NukeACountry.io");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 150));
-        titleLabel.setForeground(Color.BLACK);
+        titleLabel.setForeground(Color.WHITE);
         titleLabel.setBackground(new Color(60, 63, 65));
+        titleLabel.setOpaque(true);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Add question mark button next to the title
-        JButton helpButton = new JButton("Help");
-        helpButton.setFont(new Font("Arial", Font.BOLD, 60));
-        helpButton.setForeground(Color.BLACK);
-        helpButton.setBackground(Color.GRAY);
-        helpButton.setBorderPainted(false);
-        helpButton.setFocusPainted(false);
-        helpButton.addActionListener(e -> main.showHelpScreen()); // Call showHelpScreen method on click
+
 
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.add(titleLabel, BorderLayout.CENTER);
-        titlePanel.add(helpButton, BorderLayout.EAST);
 
         add(titlePanel, BorderLayout.NORTH);
 
@@ -45,6 +40,8 @@ public class ControlPanel extends JPanel {
         startButton.setForeground(Color.WHITE);
         startButton.setBorderPainted(false);
         startButton.setBackground(new Color(32, 155, 211));
+        startButton.setOpaque(true);
+        startButton.setBorderPainted(false);
         startButton.setFocusPainted(false);
 
         startButton.addMouseListener(new MouseAdapter() {
@@ -70,6 +67,15 @@ public class ControlPanel extends JPanel {
 
         startButton.addActionListener(e -> {
             startButton.setText("CONTINUE");
+            
+            if (Switch == false) {
+            	main.showHelpScreen();
+            	Switch = true;
+            }
+            
+            else {
+            	main.showImagePanel();
+            }
         });
         buttonPanel.add(startButton);
 
@@ -77,6 +83,8 @@ public class ControlPanel extends JPanel {
         quitButton.setFont(new Font("Monospaced", Font.BOLD, 100));
         quitButton.setForeground(Color.BLACK);
         quitButton.setBackground(new Color(255, 0, 0));
+        quitButton.setOpaque(true);
+        quitButton.setBorderPainted(false);
         quitButton.setFocusPainted(false);
 
         quitButton.addActionListener(e -> System.exit(0));
@@ -84,8 +92,6 @@ public class ControlPanel extends JPanel {
 
         add(buttonPanel, BorderLayout.CENTER);
     }
-
-    public JButton getStartButton() {
-        return startButton;
-    }
+    
+    
 }

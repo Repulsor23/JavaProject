@@ -1,7 +1,8 @@
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,7 +12,8 @@ public class Main extends JFrame {
     private final CardLayout cardLayout;
     private ImagePanel imagePanel;
     private Endscreen endScreen;
-    private HelpScreen helpScreen; // Add HelpScreen instance variable
+    private HelpScreen helpScreen;
+    private Clip backgroundMusic; // Added background music clip
 
     // Arrays to hold question data
     private String[] questions;
@@ -66,9 +68,9 @@ public class Main extends JFrame {
         // Initialize question data
         initializeQuestionData();
 
-        list = new ArrayList<>(); // Initialize asked indices list
+        list = new ArrayList<>(); 
 
-        controlPanel.getStartButton().addActionListener(e -> {
+        helpScreen.getReadyButton().addActionListener(e -> {
             // Randomly select a question index
             int questionIndex = getRandomQuestionIndex();
 
@@ -82,16 +84,19 @@ public class Main extends JFrame {
             cardLayout.show(cards, "Image");
             imagePanel.requestFocusInWindow();
         });
+
+        // Load background music
+        loadBackgroundMusic();
     }
 
     private void initializeQuestionData() {
         // Question and cords
-        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the only country that voluntarily abandoned its nuclear weapons program?", "In what country is the Niagara Falls located in?", "What is the most populous country?", "What country does France share its longest land border with?", "Which country has the longest runtime of a nuclear fusion reactor?", "Which country has the longest coastline in the world?", "Which country has the largest eco-system in the world?", "In which country is Rome located in?", "In which country does the Amazon River start in?", "In which country is is the Nile River located in?", "What country did Genghis Khan Rule?", "Which country has the largest castle?", "What country is known as the Land of Fire and Ice?"};
-        countries = new String[]{"Sweden", "Russia", "South Africa", "America", "India", "Brazil", "South Korea", "Canada", "Australia", "Italy", "Peru", "Egypt", "Mongolia", "Poland", "Iceland"};
-        x1s = new int[]{906, 1017, 911, 241, 1187, 500, 1430, 165, 1386, 877, 429, 963, 1289, 913, 715};
-        y1s = new int[]{189, 91, 849, 367, 474, 617, 443, 0, 754, 392, 703, 483, 332, 316, 197};
-        x2s = new int[]{935, 1706, 999, 516, 1263, 633, 1477, 591, 1601, 938, 511, 1023, 1402, 958, 801};
-        y2s = new int[]{301, 331, 903, 534, 643, 895, 474, 361, 968, 447, 795, 551, 441, 359, 248};
+        questions = new String[]{"IKEA was founded in which country?", "What is the world's largest country?", "What is the first country that voluntarily abandoned its nuclear weapons program?", "In which country is the Grand Canyon located in?", "What is the most populous country?", "What country does France share its longest land border with?", "Which country has the longest runtime of a nuclear fusion reactor?", "Which country has the longest coastline?", "Which country was originally called New South Whales?", "In which country is Rome located in?", "In which country does the Amazon River start in?", "In which country is is the Nile River Delta located in?", "What country did Genghis Khan Rule?", "Which country has the largest castle?", "What country is known as the Land of Fire and Ice?"};
+        countries = new String[]{                            "Sweden",                               "Russia",                                                                     "South Africa",                                           "America",                              "India",                                                       "Brazil",                                                        "South Korea",                                   "Canada",                                             "Australia",                                "Italy",                                             "Peru",                                                   "Egypt",                            "Mongolia",                                "Poland",                                            "Iceland"};
+        x1s = new int[]{                                          757,                                    828,                                                                                759,                                                 208,                                  998,                                                            427,                                                                 1210,                                        138,                                                    1151,                                    737,                                                365,                                                       813,                                  1058,                                     769,                                                  597};
+        y1s = new int[]{                                          164,                                      2,                                                                                677,                                                 302,                                  389,                                                            557,                                                                  367,                                          0,                                                     608,                                    316,                                                568,                                                       400,                                   279,                                     263,                                                  157};
+        x2s = new int[]{                                          799,                                   1439,                                                                                855,                                                 439,                                 1075,                                                            579,                                                                 1249,                                        512,                                                    1376,                                    791,                                                430,                                                       866,                                  1205,                                     810,                                                  667};
+        y2s = new int[]{                                          251,                                    280,                                                                                741,                                                 440,                                  526,                                                            702,                                                                  412,                                        298,                                                     804,                                    372,                                                655,                                                       450,                                   348,                                     298,                                                  210};
     }
 
     private int getRandomQuestionIndex() {
@@ -101,20 +106,37 @@ public class Main extends JFrame {
                 showMessage("Good Job! You Are A Geography Pro! Score: " + score + "/15", "No Questions Left", -1);
                 cardLayout.show(cards, "controls");
             } else {
-                showMessage("Almost There! Just " + (list.size() - score) + " More! Score: " + score + "/15", "No Questions Left", -1);
+                showMessage("Almost there! Just " + (list.size() - score) + " More! Score: " + score + "/15", "No Questions Left", -1);
                 cardLayout.show(cards, "controls");
             }
             return -1; // No questions left to ask
         }
 
-        Random random = new Random();
-        int index;
-        do {
-            index = random.nextInt(questions.length);
-        } while (list.contains(index)); // Ensure the question hasn't been asked before
+        List<Integer> oddIndices = new ArrayList<>();
+        List<Integer> evenIndices = new ArrayList<>();
 
-        return index;
+        // Splitting indices into odd and even lists
+        for (int i = 0; i < questions.length; i++) {
+            if (!list.contains(i)) {
+                if (i % 2 != 0) {
+                    oddIndices.add(i);
+                } else {
+                    evenIndices.add(i);
+                }
+            }
+        }
+
+        // Prioritize odd indices before even ones
+        if (!oddIndices.isEmpty()) {
+            return oddIndices.get(new Random().nextInt(oddIndices.size()));
+        } else if (!evenIndices.isEmpty()) {
+            return evenIndices.get(new Random().nextInt(evenIndices.size()));
+        } else {
+            // In case no new questions are left
+            return -1;
+        }
     }
+
 
     private void showMessage(String message, String title, int questionIndex) {
         JPanel panel = new JPanel(new BorderLayout());
@@ -157,6 +179,7 @@ public class Main extends JFrame {
     }
 
     private void setupImagePanel() {
+        // Add mouse listener
         imagePanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 x = e.getX();
@@ -164,6 +187,21 @@ public class Main extends JFrame {
                 checkBounds(x, y);
             }
         });
+        
+        // Add key listener
+        imagePanel.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    // Show the last displayed question again
+                    if (lastDisplayedQuestionIndex != -1) {
+                        showMessage(questions[lastDisplayedQuestionIndex], "Question", lastDisplayedQuestionIndex);
+                    } else {
+                        showMessage("No question was displayed", "Error", -1);
+                    }
+                }
+            }
+        });
+
         imagePanel.setFocusable(true);
     }
 
@@ -182,6 +220,22 @@ public class Main extends JFrame {
         }
     }
 
+    private void loadBackgroundMusic() {
+        try {
+            // Load audio input stream
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/freebird.wav"));
+            backgroundMusic = AudioSystem.getClip();
+            backgroundMusic.open(audioInputStream);
+            // Set volume to 20%
+            FloatControl volumeControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
+            volumeControl.setValue(-7.0f);
+            // Loop the music
+            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     // Method to show the HelpScreen
     public void showHelpScreen() {
         cardLayout.show(cards, "Help");
@@ -189,6 +243,11 @@ public class Main extends JFrame {
 
     public void showControlPanel() {
         cardLayout.show(cards, "controls");
+    }
+    
+    public void showImagePanel() {
+    	cardLayout.show(cards, "Image");
+        imagePanel.requestFocusInWindow();
     }
 
     public static void main(String[] args) {
