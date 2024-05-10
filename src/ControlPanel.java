@@ -1,3 +1,10 @@
+/*
+ * Programmer: Ayan Balaji Kani, Charlie Kampp
+ * Date: May 9, 2024
+ * Purpose: This program will be the staring screen.
+ */
+
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;

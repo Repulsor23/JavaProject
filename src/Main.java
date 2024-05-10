@@ -1,3 +1,9 @@
+/*
+ * Programmer: Ayan Balaji Kani, Charlie Kampp
+ * Date: May 9, 2024
+ * Purpose: This program will be house the main logic and questions.
+ */
+
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;

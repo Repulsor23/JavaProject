@@ -1,3 +1,10 @@
+/*
+ * Programmer: Ayan Balaji Kani, Charlie Kampp
+ * Date: May 9, 2024
+ * Purpose: This program will show th instructions.
+ */
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;

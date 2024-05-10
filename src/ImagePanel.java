@@ -1,3 +1,10 @@
+/*
+ * Programmer: Ayan Balaji Kani, Charlie Kampp
+ * Date: May 9, 2024
+ * Purpose: This program will display the map.
+ */
+
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
