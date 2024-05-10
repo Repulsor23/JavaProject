@@ -13,9 +13,8 @@ public class Main extends JFrame {
     private ImagePanel imagePanel;
     private Endscreen endScreen;
     private HelpScreen helpScreen;
-    private Clip backgroundMusic; // Added background music clip
-
-    // Arrays to hold question data
+    private Clip backgroundMusic;
+    private Clip wrong;
     private String[] questions;
     private String[] countries;
     private int[] x1s;
@@ -146,7 +145,6 @@ public class Main extends JFrame {
         messageLabel.setFont(new Font("Arial", Font.PLAIN, 40)); // Change font size here
         panel.add(messageLabel, BorderLayout.CENTER);
 
-        // Create a JButton with center-aligned text using HTML
         JButton okButton = new JButton("<html><div style='text-align: center; width: 100px;'>OK</div></html>");
         okButton.setFont(new Font("Arial", Font.PLAIN, 30)); // Change button font size here
         okButton.setPreferredSize(new Dimension(200, 80)); // Set button size
@@ -213,6 +211,7 @@ public class Main extends JFrame {
                 imagePanel.updateScore(score);
                 showMessage("Correct!", "Bounds Check", -1);
             } else {
+                wrong();
                 showMessage("Oops! Maybe Next Time! - Answer: " + countries[lastDisplayedQuestionIndex], "Bounds Check", -1);
             }
         } else {
@@ -228,9 +227,23 @@ public class Main extends JFrame {
             backgroundMusic.open(audioInputStream);
             // Set volume to 20%
             FloatControl volumeControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
-            volumeControl.setValue(-7.0f);
+            volumeControl.setValue(-8.0f);
             // Loop the music
             backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void wrong() {
+        try {
+            // Load audio input stream
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/wrong.wav"));
+            wrong = AudioSystem.getClip();
+            wrong.open(audioInputStream);
+            wrong.stop(); // Stop the clip if it's currently playing
+            wrong.setFramePosition(0); // Rewind to the beginning
+            wrong.start(); // Start playing the clip
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }

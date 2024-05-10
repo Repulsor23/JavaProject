@@ -15,11 +15,10 @@ public class ImagePanel extends JPanel {
     private BufferedImage pngImage;
     private int score;
     private JLabel scoreLabel;
-    private List<Point> clickPoints = new ArrayList<>(); 
-    private Clip boom; 
+    private List<Point> clickPoints = new ArrayList<>();
+    private Clip boom;
     private Clip click;
-
-    private  Clip oops;
+    private Clip oops;
 
     public ImagePanel(String imagePath, String pngImagePath, Main main) throws IOException {
         backgroundImage = ImageIO.read(new File(imagePath));
@@ -35,7 +34,7 @@ public class ImagePanel extends JPanel {
             e.printStackTrace();
             throw new IOException("Error loading sound file.");
         }
-        
+
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/click.wav"));
             click = AudioSystem.getClip();
@@ -60,14 +59,29 @@ public class ImagePanel extends JPanel {
                 clickPoints.add(e.getPoint());
                 System.out.println(e.getX());
                 System.out.println(e.getY());
-                repaint(); 
-                boom(); 
+                repaint();
+                boom();
                 click();
-                if (1325 > e.getX() && e.getX() > 1249 && 412 > e.getY() && e.getY() > 279){
+                if (1325 > e.getX() && e.getX() > 1249 && 412 > e.getY() && e.getY() > 279) {
                     oops();
                 }
             }
         });
+
+        JButton closeButton = new JButton("X");
+        closeButton.setBounds(10, 5, 100, 100);
+        closeButton.setFont(new Font("Monospaced", Font.PLAIN, 50));
+        closeButton.setContentAreaFilled(false);
+        closeButton.setForeground(Color.RED);
+        closeButton.setBorderPainted(false);
+        closeButton.addActionListener(e -> {
+            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit to menu?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                CardLayout layout = (CardLayout) getParent().getLayout();
+                layout.show(getParent(), "controls");
+            }
+        });
+        add(closeButton);
 
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 40));
@@ -84,7 +98,7 @@ public class ImagePanel extends JPanel {
 
         for (Point point : clickPoints) {
             int x = (int) point.getX() - 25;
-            int y = (int) point.getY() - 25; 
+            int y = (int) point.getY() - 25;
             g.drawImage(pngImage, x, y, 50, 50, this);
         }
     }
@@ -103,7 +117,7 @@ public class ImagePanel extends JPanel {
             boom.start(); // Start playing the clip
         }
     }
-    
+
     private void click() {
         if (click != null) {
             click.stop(); // Stop the clip if it's currently playing
