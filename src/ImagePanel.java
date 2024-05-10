@@ -18,7 +18,8 @@ public class ImagePanel extends JPanel {
     private List<Point> clickPoints = new ArrayList<>(); 
     private Clip boom; 
     private Clip click;
-    
+
+    private  Clip oops;
 
     public ImagePanel(String imagePath, String pngImagePath, Main main) throws IOException {
         backgroundImage = ImageIO.read(new File(imagePath));
@@ -44,13 +45,27 @@ public class ImagePanel extends JPanel {
             throw new IOException("Error loading sound file.");
         }
 
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/oops.wav"));
+            oops = AudioSystem.getClip();
+            oops.open(audioInputStream);
+        } catch (UnsupportedAudioFileException | LineUnavailableException e) {
+            e.printStackTrace();
+            throw new IOException("Error loading sound file.");
+        }
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 clickPoints.add(e.getPoint());
+                System.out.println(e.getX());
+                System.out.println(e.getY());
                 repaint(); 
                 boom(); 
                 click();
+                if (1325 > e.getX() && e.getX() > 1249 && 412 > e.getY() && e.getY() > 279){
+                    oops();
+                }
             }
         });
 
@@ -94,6 +109,14 @@ public class ImagePanel extends JPanel {
             click.stop(); // Stop the clip if it's currently playing
             click.setFramePosition(0); // Rewind to the beginning
             click.start(); // Start playing the clip
+        }
+    }
+
+    private void oops() {
+        if (oops != null) {
+            oops.stop(); // Stop the clip if it's currently playing
+            oops.setFramePosition(0); // Rewind to the beginning
+            oops.start(); // Start playing the clip
         }
     }
 }
