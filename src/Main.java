@@ -16,6 +16,7 @@ public class Main extends JFrame {
     private Clip backgroundMusic;
     private Clip wrong;
     private Clip fail;
+    private Clip success;
     private String[] questions;
     private String[] countries;
     private int[] x1s;
@@ -103,12 +104,14 @@ public class Main extends JFrame {
         if (list.size() == questions.length) {
             if (score == list.size()) {
                 cardLayout.show(cards, "End");
-                showMessage("Good Job! You Are A Geography Pro! Score: " + score + "/15", "No Questions Left", -1);
                 backgroundMusic.stop();
+                success();
+                showMessage("Good Job! You Are A Geography Pro! Score: " + score + "/15", "No Questions Left", -1);
                 cardLayout.show(cards, "controls");
             } else {
-                showMessage("Almost there! Just " + (list.size() - score) + " More! Score: " + score + "/15", "No Questions Left", -1);
+                cardLayout.show(cards, "End");
                 backgroundMusic.stop();
+                showMessage("Almost there! Just " + (list.size() - score) + " More! Score: " + score + "/15", "No Questions Left", -1);
                 fail();
                 cardLayout.show(cards, "controls");
             }
@@ -260,6 +263,19 @@ public class Main extends JFrame {
             fail.stop(); // Stop the clip if it's currently playing
             fail.setFramePosition(0); // Rewind to the beginning
             fail.start(); // Start playing the clip
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void success() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/success.wav"));
+            success = AudioSystem.getClip();
+            success.open(audioInputStream);
+            success.stop(); // Stop the clip if it's currently playing
+            success.setFramePosition(0); // Rewind to the beginning
+            success.start(); // Start playing the clip
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
